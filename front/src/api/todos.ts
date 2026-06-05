@@ -8,7 +8,7 @@ import {
   type CreateTodoInput,
   type Todo,
   type UpdateTodoInput,
-} from './client';
+} from './client.ts';
 
 const todosKey = ['todos'] as const;
 const todoKey = (id: string) => ['todos', id] as const;

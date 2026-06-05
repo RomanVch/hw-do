@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Trash2 } from 'lucide-react';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox.tsx';
+import { Button } from '@/components/ui/button.tsx';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,9 +12,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import type { Todo } from '@/api/client';
-import { cn } from '@/lib/utils';
+} from '@/components/ui/alert-dialog.tsx';
+import type { Todo } from '@/api/client.ts';
+import { cn } from '@/lib/utils.ts';
 
 interface Props {
   todo: Todo;

@@ -1,9 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Toaster } from '@/components/ui/sonner';
-import { TodosListPage } from '@/pages/todos-list';
-import { TodoDetailPage } from '@/pages/todo-detail';
-import { NotFoundPage } from '@/pages/not-found';
+import { Toaster } from '@/components/ui/sonner.tsx';
+import { TodosListPage } from '@/pages/todos-list.tsx';
+import { TodoDetailPage } from '@/pages/todo-detail.tsx';
+import { NotFoundPage } from '@/pages/not-found.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {

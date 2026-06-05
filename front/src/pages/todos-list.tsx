@@ -6,15 +6,15 @@ import {
   useDeleteTodo,
   useTodos,
   useUpdateTodo,
-} from '@/api/todos';
-import { createTodoSchema, type CreateTodoValues } from '@/schemas/todo';
-import { errorMessage, isValidationError } from '@/api/client';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card } from '@/components/ui/card';
-import { TodoRow } from '@/components/todo-row';
-import { toast } from '@/components/ui/sonner';
+} from '@/api/todos.ts';
+import { createTodoSchema, type CreateTodoValues } from '@/schemas/todo.ts';
+import { errorMessage, isValidationError } from '@/api/client.ts';
+import { Button } from '@/components/ui/button.tsx';
+import { Input } from '@/components/ui/input.tsx';
+import { Skeleton } from '@/components/ui/skeleton.tsx';
+import { Card } from '@/components/ui/card.tsx';
+import { TodoRow } from '@/components/todo-row.tsx';
+import { toast } from '@/components/ui/sonner.tsx';
 
 export function TodosListPage() {
   const { data: todos, isLoading, isError, error, refetch } = useTodos();
@@ -141,7 +141,7 @@ function TodoListItem({
   onDelete,
 }: {
   todoId: string;
-  todo: import('@/api/client').Todo;
+  todo: import('@/api/client.ts').Todo;
   onDelete: () => void;
 }) {
   const updateTodo = useUpdateTodo(todoId);

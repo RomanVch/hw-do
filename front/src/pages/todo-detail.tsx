@@ -3,16 +3,16 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronLeft, Loader2, Trash2 } from 'lucide-react';
-import { NotFoundError, useDeleteTodo, useTodo, useUpdateTodo } from '@/api/todos';
-import { editTodoSchema, type EditTodoValues } from '@/schemas/todo';
-import { errorMessage, isValidationError } from '@/api/client';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card } from '@/components/ui/card';
+import { NotFoundError, useDeleteTodo, useTodo, useUpdateTodo } from '@/api/todos.ts';
+import { editTodoSchema, type EditTodoValues } from '@/schemas/todo.ts';
+import { errorMessage, isValidationError } from '@/api/client.ts';
+import { Button } from '@/components/ui/button.tsx';
+import { Input } from '@/components/ui/input.tsx';
+import { Textarea } from '@/components/ui/textarea.tsx';
+import { Checkbox } from '@/components/ui/checkbox.tsx';
+import { Label } from '@/components/ui/label.tsx';
+import { Skeleton } from '@/components/ui/skeleton.tsx';
+import { Card } from '@/components/ui/card.tsx';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,9 +23,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { NotFoundPage } from './not-found';
-import { toast } from '@/components/ui/sonner';
+} from '@/components/ui/alert-dialog.tsx';
+import { NotFoundPage } from './not-found.tsx';
+import { toast } from '@/components/ui/sonner.tsx';
 
 export function TodoDetailPage() {
   const { id } = useParams<{ id: string }>();
