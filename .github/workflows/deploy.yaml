@@ -49,8 +49,9 @@ jobs:
           script: |
             cd ~/vchch.xyz/
             sed -i "s|^APP_VERSION=.*|APP_VERSION=sha-${{ github.sha }}|" .env.development.compose
-            docker compose pull back front
-            docker compose up -d --no-deps back front
+            docker compose --env-file .env.development.compose pull back front
+            docker compose --env-file .env.development.compose up -d --no-deps back front
+
   verify:
     needs: [ deploy ]
     runs-on: ubuntu-latest
@@ -60,7 +61,7 @@ jobs:
         env:
           E2E_BASE_URL: ${{ vars.VITE_API_URL }}
         run: |
-          # vars.VITE_API_URL у нас вида https://домен/api → отрежем /api
+          # vars.VITE_API_URL
           export E2E_BASE_URL="${E2E_BASE_URL%/api}"
           bash scripts/smoke.sh
 
