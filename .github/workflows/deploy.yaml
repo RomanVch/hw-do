@@ -1,0 +1,76 @@
+name: deploy
+
+on:
+  push:
+    branches: [week4]
+
+jobs:
+  checks:
+    uses: ./.github/workflows/typecheck.yaml
+  build:
+    runs-on: ubuntu-latest
+    needs: checks
+    strategy:
+      matrix:
+        include:
+          - service: back
+            context: ./back
+
+          - service: front
+            context: ./front
+            build_arg: "VITE_API_URL"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Вход в Docker
+        run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+
+      - name: Build и push образа с двумя тегами
+        env:
+          IMAGE_SHA: ${{ secrets.DOCKER_USER }}/todo-${{matrix.service}}:sha-${{ github.sha }}
+          IMAGE_LATEST: ${{ secrets.DOCKER_USER }}/todo-${{matrix.service}}:latest
+          BUILD_ARG: ${{ matrix.build_arg }}
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+        run: |
+          cd ${{ matrix.context }}
+          docker build ${BUILD_ARG:+--build-arg $BUILD_ARG=$VITE_API_URL} -t $IMAGE_SHA -t $IMAGE_LATEST .
+          docker push $IMAGE_SHA
+          docker push $IMAGE_LATEST
+  deploy:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/vchch.xyz/
+            sed -i "s|^APP_VERSION=.*|APP_VERSION=sha-${{ github.sha }}|" .env.development.compose
+            docker compose pull back front
+            docker compose up -d --no-deps back front
+  verify:
+    needs: [ deploy ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Smoke
+        env:
+          E2E_BASE_URL: ${{ vars.VITE_API_URL }}
+        run: |
+          # vars.VITE_API_URL у нас вида https://домен/api → отрежем /api
+          export E2E_BASE_URL="${E2E_BASE_URL%/api}"
+          bash scripts/smoke.sh
+
+  notify:
+    needs: [ checks, build, deploy, verify ]
+    if: always()
+    uses: ./.github/workflows/notify.yaml
+    secrets: inherit
+    with:
+      checks_result: ${{ needs.checks.result }}
+      build_result: ${{ needs.build.result }}
+      deploy_result: ${{ needs.deploy.result }}
+      verify_result: ${{ needs.verify.result }}

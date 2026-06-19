@@ -18,6 +18,7 @@ services:
     ports:
       - '15432:5432'
     #   - персистить данные через NAMED VOLUME (не bind-mount); имя тома — pgdata
+    restart: unless-stopped
     volumes:
       - pgdata:/var/lib/postgresql/data
     #   - добавить проверку готовности: запрос к самой БД через pg_isready,
@@ -35,13 +36,16 @@ services:
     #     попыток до признания unhealthy, сколько ждать перед самой первой проверкой
 
   back:
-    image: ${DOCKERHUB_USERNAME}/todo-back:${IMAGE_TAG}
+    image: ${DOCKERHUB_USERNAME}/todo-back:${APP_VERSION}
     env_file: .env.development.back
     ports: ["13000:3000"]
+    environment:
+      APP_VERSION: ${APP_VERSION}
     depends_on:
       db:
         condition: service_healthy
     volumes: ["./app-config:/app/config:ro"]
+    restart: unless-stopped
     # TODO — backend (NestJS):
     #   - указать образ, который ты публикуешь в свой Docker Hub репозиторий
     #     (используй переменные DOCKERHUB_USERNAME и IMAGE_TAG)
@@ -55,8 +59,9 @@ services:
     #     не мог изменить файл на хосте
 
   front:
-    image: ${DOCKERHUB_USERNAME}/todo-front:${IMAGE_TAG}
+    image: ${DOCKERHUB_USERNAME}/todo-front:${APP_VERSION}
     ports: ["18080:80"]
+    restart: unless-stopped
     depends_on:
       back:
         condition: service_started
