@@ -47,12 +47,11 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ~/vchch.xyz/
             echo "SHA: ${{ github.sha }}"
-            sed -i "s|^APP_VERSION=.*|APP_VERSION=sha-${{ github.sha }}|" .env.development.compose
-            cat .env.development.compose
-            docker compose --env-file .env.development.compose pull back front
-            docker compose --env-file .env.development.compose up -d --no-deps --force-recreate back front
+            sed -i "s|^APP_VERSION=.*|APP_VERSION=sha-${{ github.sha }}|" /home/deploy/vchch.xyz/.env.development.compose
+            cat /home/deploy/vchch.xyz/.env.development.compose
+            docker compose -f /home/deploy/vchch.xyz/docker-compose.yml --env-file /home/deploy/vchch.xyz/.env.development.compose pull back front
+            docker compose -f /home/deploy/vchch.xyz/docker-compose.yml --env-file /home/deploy/vchch.xyz/.env.development.compose up -d --no-deps --force-recreate back front
 
   verify:
     needs: [ deploy ]
