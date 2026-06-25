@@ -47,14 +47,9 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            APP_VERSION=sha-${{ github.sha }} docker compose \
-              -f /home/deploy/vchch.xyz/docker-compose.yml \                                                                                                       
-              --env-file /home/deploy/vchch.xyz/.env.development.compose \
-              pull back front
-            APP_VERSION=sha-${{ github.sha }} docker compose \
-              -f /home/deploy/vchch.xyz/docker-compose.yml \
-              --env-file /home/deploy/vchch.xyz/.env.development.compose \
-              up -d --no-deps --force-recreate back front
+            touch /tmp/appleboy_test_$(date +%s).txt                                                                                                                
+            echo "done"
+
 
 
   verify:
