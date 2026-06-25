@@ -48,7 +48,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "SHA: ${{ github.sha }}"
-            sed -i "s|^APP_VERSION=.*|APP_VERSION=sha-${{ github.sha }}|" /home/deploy/vchch.xyz/.env.development.compose
+            grep -v "^APP_VERSION=" /home/deploy/vchch.xyz/.env.development.compose > /tmp/hw2.env
+            echo "APP_VERSION=sha-${{ github.sha }}" >> /tmp/hw2.env
+            mv /tmp/hw2.env /home/deploy/vchch.xyz/.env.development.compose
             cat /home/deploy/vchch.xyz/.env.development.compose
             docker compose -f /home/deploy/vchch.xyz/docker-compose.yml --env-file /home/deploy/vchch.xyz/.env.development.compose pull back front
             docker compose -f /home/deploy/vchch.xyz/docker-compose.yml --env-file /home/deploy/vchch.xyz/.env.development.compose up -d --no-deps --force-recreate back front
