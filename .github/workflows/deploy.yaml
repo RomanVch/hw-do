@@ -46,8 +46,17 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          debug: true
           script: |
-            touch test.txt
+            set -eux
+            # проверить что висит
+            ps aux | grep -E 'docker|compose|deploy' | grep -v grep
+            # проверить занятые порты
+            ss -tlnp | grep -E '80|443|3000|5000'
+            # логи последнего запуска
+            docker ps -a
+            docker logs --tail=20 <имя_контейнера> 2>&1 || true
+
 
   verify:
     needs: [ deploy ]
