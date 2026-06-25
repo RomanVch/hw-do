@@ -50,7 +50,7 @@ jobs:
             cd ~/vchch.xyz/
             sed -i "s|^APP_VERSION=.*|APP_VERSION=sha-${{ github.sha }}|" .env.development.compose
             docker compose --env-file .env.development.compose pull back front
-            docker compose --env-file .env.development.compose up -d --no-deps back front
+            docker compose --env-file .env.development.compose up -d --no-deps --force-recreate back front
 
   verify:
     needs: [ deploy ]
@@ -64,6 +64,7 @@ jobs:
           E2E_BASE_URL="$(printf '%s' "$E2E_BASE_URL" | tr -d '\r\n')"
           export E2E_BASE_URL="${E2E_BASE_URL%/api}"
           bash scripts/smoke.sh
+  
 
   notify:
     needs: [ checks, build, deploy, verify ]
