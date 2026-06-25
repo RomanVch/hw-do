@@ -47,6 +47,8 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            whoami
+            id
             echo "SHA: ${{ github.sha }}"
             grep -v "^APP_VERSION=" /home/deploy/vchch.xyz/.env.development.compose > /tmp/hw2.env
             echo "APP_VERSION=sha-${{ github.sha }}" >> /tmp/hw2.env
