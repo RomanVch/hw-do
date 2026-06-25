@@ -46,18 +46,11 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          debug: true
-          script_stop: true
           script: |
-            set -eux
-            # проверить что висит
-            ps aux | grep -E 'docker|compose|deploy' | grep -v grep
-            # проверить занятые порты
-            ss -tlnp | grep -E '80|443|3000|5000'
-            # логи последнего запуска
-            docker ps -a
-            docker logs --tail=20 <имя_контейнера> 2>&1 || true
-
+            cd ~/vchch.xyz/
+            sed -i "s|^APP_VERSION=.*|APP_VERSION=sha-${{ github.sha }}|" .env.development.compose
+            docker compose --env-file .env.development.compose pull back front
+            docker compose --env-file .env.development.compose up -d --no-deps back front
 
   verify:
     needs: [ deploy ]
