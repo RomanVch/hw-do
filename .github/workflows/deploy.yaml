@@ -47,15 +47,13 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker compose \
-              -f /home/deploy/vchch.xyz/docker-compose.yml \                                                                                                             
+            APP_VERSION=sha-${{ github.sha }} docker compose \
+              -f /home/deploy/vchch.xyz/docker-compose.yml \                                                                                                       
               --env-file /home/deploy/vchch.xyz/.env.development.compose \
-              -e APP_VERSION=sha-${{ github.sha }} \
               pull back front
-            docker compose \
+            APP_VERSION=sha-${{ github.sha }} docker compose \
               -f /home/deploy/vchch.xyz/docker-compose.yml \
               --env-file /home/deploy/vchch.xyz/.env.development.compose \
-              -e APP_VERSION=sha-${{ github.sha }} \
               up -d --no-deps --force-recreate back front
 
 
