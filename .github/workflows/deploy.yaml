@@ -40,25 +40,17 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
-      - name: Setup SSH
-        run: |
-          install -m 600 -D /dev/null ~/.ssh/id_rsa
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-
       - name: Deploy via SSH
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "APP_VERSION=sha-${{ github.sha }} docker compose \
-              -f /home/deploy/vchch.xyz/docker-compose.yml \
-              --env-file /home/deploy/vchch.xyz/.env.development.compose \
-              pull back front && \
-             APP_VERSION=sha-${{ github.sha }} docker compose \
-              -f /home/deploy/vchch.xyz/docker-compose.yml \
-              --env-file /home/deploy/vchch.xyz/.env.development.compose \
-              up -d --no-deps --force-recreate back front"
-
-
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/vchch.xyz/
+            sed -i "s|^APP_VERSION=.*|APP_VERSION=sha-${{ github.sha }}|" .env.development.compose
+            docker compose --env-file .env.development.compose pull back front
+            docker compose --env-file .env.development.compose up -d --no-deps back front
 
   verify:
     needs: [ deploy ]
