@@ -47,13 +47,11 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            set -euo pipefail
+            pwd
             cd /home/deploy/vchch.xyz/
-            sed -i "s|APP_VERSION=.*|APP_VERSION=123|" .env.development.compose
-            echo "TEST" >> .env.development.compose
-            docker compose --env-file .env.development.compose pull back front
-            docker compose --env-file .env.development.compose up -d --no-deps back front
-
+            pwd 
+            touch test.txt
+            pwd >> test.txt
   verify:
     needs: [ deploy ]
     runs-on: ubuntu-latest
