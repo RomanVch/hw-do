@@ -61,7 +61,7 @@ jobs:
         env:
           E2E_BASE_URL: ${{ vars.VITE_API_URL }}
         run: |
-          # vars.VITE_API_URL
+          E2E_BASE_URL="$(printf '%s' "$E2E_BASE_URL" | tr -d '\r\n')"
           export E2E_BASE_URL="${E2E_BASE_URL%/api}"
           bash scripts/smoke.sh
 
