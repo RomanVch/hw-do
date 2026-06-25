@@ -47,6 +47,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           debug: true
+          script_stop: true
           script: |
             set -eux
             # проверить что висит
