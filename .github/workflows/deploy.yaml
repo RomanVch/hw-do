@@ -47,7 +47,11 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            set -euo pipefail
             cd /home/deploy/vchch.xyz/
+            echo "==> Текущая директория: $(pwd)"
+            echo "==> Содержимое .env до изменения:"
+            cat .env
             sed -i "s|^APP_VERSION=.*|APP_VERSION=sha-${{ github.sha }}|" .env.development.compose
             echo "TEST" >> .env.development.compose
             docker compose --env-file .env.development.compose pull back front
