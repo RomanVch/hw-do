@@ -5,6 +5,7 @@ import { TodosListPage } from '@/pages/todos-list.tsx';
 import { TodoDetailPage } from '@/pages/todo-detail.tsx';
 import { NotFoundPage } from '@/pages/not-found.tsx';
 
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
