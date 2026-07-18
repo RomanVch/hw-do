@@ -12,3 +12,8 @@ test-results
 .env.*.local
 back/dist
 front/dist
+
+k8s/secret.yaml
+k8s/dockerhub-secret.yaml
+kubeconfig
+*.kubeconfig
