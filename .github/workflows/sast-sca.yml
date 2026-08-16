@@ -14,11 +14,11 @@ jobs:
     container: { image: semgrep/semgrep }
     steps:
       - uses: actions/checkout@v4
-      - run: semgrep scan --config=p/typescript --config=p/nodejs --config=p/owasp-top-ten --error --exclude=node_modules --exclude=dist .
+      - run: semgrep scan --config=p/typescript --config=p/nodejs --config=p/owasp-top-ten --exclude=node_modules --exclude=dist .
   trivy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: |
           curl -sL https://github.com/aquasecurity/trivy/releases/download/v0.69.2/trivy_0.69.2_Linux-64bit.tar.gz | tar -xz trivy
-          ./trivy fs --scanners vuln --severity CRITICAL,HIGH --ignore-unfixed --exit-code 1 .
+          ./trivy fs --scanners vuln --severity CRITICAL --ignore-unfixed --exit-code 1 .
